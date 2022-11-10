@@ -53,7 +53,8 @@ public class PgpDecryptionUtil {
                 .setProvider(BouncyCastleProvider.PROVIDER_NAME).build(passCode));
     }
 
-    public void decrypt(InputStream encryptedIn, OutputStream clearOut) throws PGPException, IOException {
+    public void decrypt(InputStream encryptedIn, OutputStream clearOut)
+            throws PGPException, IOException {
         // Removing armour and returning the underlying binary encrypted stream
         encryptedIn = PGPUtil.getDecoderStream(encryptedIn);
         JcaPGPObjectFactory pgpObjectFactory = new JcaPGPObjectFactory(encryptedIn);

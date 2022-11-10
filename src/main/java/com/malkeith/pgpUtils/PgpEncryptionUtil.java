@@ -50,8 +50,10 @@ public class PgpEncryptionUtil {
     private int bufferSize = 1 << 16;
 
 
-    public void encrypt(OutputStream dataOut, InputStream clearIn, long length, InputStream publicKeyIn) throws IOException, PGPException {
-        PGPCompressedDataGenerator compressedDataGenerator = new PGPCompressedDataGenerator(compressionAlgorithm);
+    public void encrypt(OutputStream encryptOut, InputStream clearIn, long length, InputStream publicKeyIn)
+            throws IOException, PGPException {
+        PGPCompressedDataGenerator compressedDataGenerator =
+                new PGPCompressedDataGenerator(compressionAlgorithm);
         PGPEncryptedDataGenerator pgpEncryptedDataGenerator = new PGPEncryptedDataGenerator(
                 // This bit here configures the encrypted data generator
                 new JcePGPDataEncryptorBuilder(symmetricKeyAlgorithm)
@@ -60,16 +62,17 @@ public class PgpEncryptionUtil {
                         .setProvider(BouncyCastleProvider.PROVIDER_NAME)
         );
         // Adding public key
-        pgpEncryptedDataGenerator.addMethod(new JcePublicKeyKeyEncryptionMethodGenerator(CommonUtils.getPublicKey(publicKeyIn)));
+        pgpEncryptedDataGenerator.addMethod(new JcePublicKeyKeyEncryptionMethodGenerator(
+                CommonUtils.getPublicKey(publicKeyIn)));
         if (armor) {
-            dataOut = new ArmoredOutputStream(dataOut);
+            encryptOut = new ArmoredOutputStream(encryptOut);
         }
-        OutputStream cipherOutStream = pgpEncryptedDataGenerator.open(dataOut, new byte[bufferSize]);
+        OutputStream cipherOutStream = pgpEncryptedDataGenerator.open(encryptOut, new byte[bufferSize]);
         CommonUtils.copyAsLiteralData(compressedDataGenerator.open(cipherOutStream), clearIn, length, bufferSize);
         // Closing all output streams in sequence
         compressedDataGenerator.close();
         cipherOutStream.close();
-        dataOut.close();
+        encryptOut.close();
     }
 
     public byte[] encrypt(byte[] clearData, InputStream pubicKeyIn) throws PGPException, IOException {
@@ -79,11 +82,11 @@ public class PgpEncryptionUtil {
         return outputStream.toByteArray();
     }
 
-    public InputStream encrypt(InputStream clearIn, long length, InputStream publicKeyIn) throws IOException, PGPException {
+    public InputStream encrypt(InputStream clearIn, long length, InputStream publicKeyIn)
+            throws IOException, PGPException {
         File tempFile = File.createTempFile("pgp-", "-encrypted");
         encrypt(Files.newOutputStream(tempFile.toPath()), clearIn, length, publicKeyIn);
         return Files.newInputStream(tempFile.toPath());
-
     }
 
     public byte[] encrypt(byte[] clearData, String publicKeyStr) throws PGPException, IOException {

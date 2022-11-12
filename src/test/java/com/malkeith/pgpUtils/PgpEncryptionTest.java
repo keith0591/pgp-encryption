@@ -73,7 +73,8 @@ public class PgpEncryptionTest {
     @Test
     public void testByteEncryption() throws IOException, PGPException {
         // Encrypting the test bytes
-        byte[] encryptedBytes = pgpEncryptionUtil.encrypt(testString.getBytes(Charset.defaultCharset()), publicKey.openStream());
+        byte[] encryptedBytes = pgpEncryptionUtil.encrypt(testString.getBytes(Charset.defaultCharset()),
+                publicKey.openStream());
         // Decrypting the generated encrypted bytes
         byte[] decryptedBytes = pgpDecryptionUtil.decrypt(encryptedBytes);
         // Comparing the original test string with string generated using the decrypted bytes
@@ -86,7 +87,8 @@ public class PgpEncryptionTest {
         File encryptedFile = tempFolder.newFile();
         File originalFile = new File(testFile.toURI());
         try (OutputStream fos = Files.newOutputStream(encryptedFile.toPath())) {
-            pgpEncryptionUtil.encrypt(fos, Files.newInputStream(originalFile.toPath()), originalFile.length(), publicKey.openStream());
+            pgpEncryptionUtil.encrypt(fos, Files.newInputStream(originalFile.toPath()), originalFile.length(),
+                    publicKey.openStream());
         }
         // Decrypting the generated pgp encrypted temp file and writing to another temp file
         File decryptedFile = tempFolder.newFile();
@@ -107,6 +109,24 @@ public class PgpEncryptionTest {
         // Comparing the original file contents with the decrypted file contents
         assertEquals(IOUtils.toString(Files.newInputStream(originalFile.toPath()), Charset.defaultCharset()),
                 IOUtils.toString(Files.newInputStream(decryptedFile.toPath()), Charset.defaultCharset()));
+    }
+
+
+    @Test
+    public void testByteEncryptionWithNewConf() throws IOException, PGPException {
+        pgpEncryptionUtil = PgpEncryptionUtil.builder()
+                .armor(false)
+                .compressionAlgorithm(CompressionAlgorithmTags.BZIP2)
+                .symmetricKeyAlgorithm(SymmetricKeyAlgorithmTags.BLOWFISH)
+                .withIntegrityCheck(false)
+                .build();
+        // Encrypting the test bytes
+        byte[] encryptedBytes = pgpEncryptionUtil.encrypt(testString.getBytes(Charset.defaultCharset()),
+                publicKey.openStream());
+        // Decrypting the generated encrypted bytes
+        byte[] decryptedBytes = pgpDecryptionUtil.decrypt(encryptedBytes);
+        // Comparing the original test string with string generated using the decrypted bytes
+        assertEquals(testString, new String(decryptedBytes, Charset.defaultCharset()));
     }
 
 

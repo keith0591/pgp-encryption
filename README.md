@@ -5,7 +5,7 @@ Utility to encrypt and decrypt anything (bytes, file, streams) with pgp encrypti
 
 The best way is to look at the test class `PgpEncryptionTest`. But I have shared some quick snippets below if you are in a hurry
 
-For a detailed explanation of how the utility works go [here]( "Medium")
+For a detailed explanation of how the utility works go [here]( https://medium.com/@kthsingh.ms/encrypt-and-decrypt-anything-bytes-files-streams-with-pgp-using-bouncy-castle-and-java-ad335ae9f747 "Medium")
 
 ### Encryption:
 First instantiate a `PgpEncryptionUtil` object like so:

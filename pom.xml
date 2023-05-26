@@ -20,6 +20,19 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>full-contact</id>
+            <name>release-repo</name>
+            <url>https://fullcontact.jfrog.io/fullcontact/libs-releases-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>full-contact</id>
+            <name>snapshot-repo</name>
+            <url>https://fullcontact.jfrog.io/fullcontact/libs-snapshots-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>

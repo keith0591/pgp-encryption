@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="pgp-encryption" target="1.8" />
+      <module name="pgp-encryption" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>
